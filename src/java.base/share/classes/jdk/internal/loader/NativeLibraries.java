@@ -261,6 +261,8 @@ public final class NativeLibraries {
     public NativeLibrary loadLibrary(String name) {
         assert name.indexOf(File.separatorChar) < 0;
         assert caller != null;
+        
+        //System.out.println("NativeLibraries.loadLibrary name = " + name);
 
         return loadLibrary(caller, name);
     }
@@ -278,8 +280,10 @@ public final class NativeLibraries {
         assert name.indexOf(File.separatorChar) < 0;
 
         NativeLibrary lib = findFromPaths(LibraryPaths.SYS_PATHS, fromClass, name);
+//        System.out.println("NativeLibraries.loadLibrary fromClass = " + fromClass + ", name = " + name + ", lib = " + lib + ", LibraryPaths.SYS_PATHS = " + LibraryPaths.SYS_PATHS);
         if (lib == null && searchJavaLibraryPath) {
             lib = findFromPaths(LibraryPaths.USER_PATHS, fromClass, name);
+//            System.out.println("NativeLibraries.loadLibrary fromClass = " + fromClass + ", name = " + name + ", lib = " + lib + ", LibraryPaths.USER_PATHS = " + LibraryPaths.USER_PATHS);
         }
         return lib;
     }
@@ -307,6 +311,8 @@ public final class NativeLibraries {
     private NativeLibrary findFromPaths(String[] paths, Class<?> fromClass, String name) {
         for (String path : paths) {
             File libfile = new File(path, System.mapLibraryName(name));
+            
+//            System.out.println("NativeLibraries.findFromPaths  libfile = " + libfile + ", fromClass = " + fromClass);
             NativeLibrary nl = loadLibrary(fromClass, libfile);
             if (nl != null) {
                 return nl;
@@ -380,7 +386,10 @@ public final class NativeLibraries {
                 throw new InternalError("Native library " + name + " has been loaded");
             }
 
-            return load(this, name, isBuiltin, isJNI);
+            boolean result = load(this, name, isBuiltin, isJNI);
+            com.ibm.oti.vm.VM.getVMLangAccess().loadLibrary(fromClass, name);
+            return result;
+//            return load(this, name, isBuiltin, isJNI);
         }
     }
 
