@@ -22,6 +22,11 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+/*
+ * ===========================================================================
+ * (c) Copyright IBM Corp. 2020, 2020 All Rights Reserved
+ * ===========================================================================
+ */
 package jdk.internal.loader;
 
 import jdk.internal.misc.VM;
@@ -379,8 +384,15 @@ public final class NativeLibraries {
             if (handle != 0) {
                 throw new InternalError("Native library " + name + " has been loaded");
             }
+            
+            boolean result = load(this, name, isBuiltin, isJNI);      //OpenJ9-NativeLibraries
+            keepalive(this);                                          //OpenJ9-NativeLibraries
 
-            return load(this, name, isBuiltin, isJNI);
+            return result;                                            //OpenJ9-NativeLibraries
+        }
+        
+        private static void keepalive(NativeLibraryImpl nli) {        //OpenJ9-NativeLibraries 
+        	return;                                                   //OpenJ9-NativeLibraries
         }
     }
 
