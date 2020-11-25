@@ -22,6 +22,11 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+/*
+ * ===========================================================================
+ * (c) Copyright IBM Corp. 2020, 2020 All Rights Reserved
+ * ===========================================================================
+ */
 
 package java.lang;
 
@@ -111,7 +116,7 @@ public class NullPointerException extends RuntimeException {
         String message = super.getMessage();
         if (message == null) {
             synchronized(this) {
-                if (extendedMessageState == 1) {
+                if (extendedMessageState != 2) { // OpenJ9 JEP358
                     // Only the original stack trace was filled in. Message will
                     // compute correctly.
                     extendedMessage = getExtendedNPEMessage();
